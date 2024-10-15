@@ -34,7 +34,6 @@ const App = () => {
   // Connect to the device and retrieve the service
   const connectToScooter = async () => {
     try {
-      // Only request the device if we don't have it stored already
       let scooterDevice = device;
       if (!scooterDevice) {
         scooterDevice = await navigator.bluetooth.requestDevice({
@@ -44,14 +43,12 @@ const App = () => {
         setDevice(scooterDevice);
       }
 
-      // Connect to the GATT server if not connected already
       let gatt = gattServer;
       if (!gatt) {
         gatt = await scooterDevice.gatt.connect();
         setGattServer(gatt);
       }
 
-      // Retrieve the service if not retrieved already
       let scooterService = service;
       if (!scooterService) {
         scooterService = await gatt.getPrimaryService(SERVICE_UUID);
@@ -64,6 +61,7 @@ const App = () => {
       setConnected(true);
     } catch (error) {
       console.error("Error connecting to scooter:", error);
+      setToastMessage("Failed to connect to the scooter.");
     }
   };
 
@@ -93,7 +91,6 @@ const App = () => {
 
   // Utility function to decode characteristic value
   const decodeValue = (value) => {
-    // Convert raw value to human-readable format (e.g., UTF-8 or integer)
     const decoder = new TextDecoder('utf-8');
     return decoder.decode(value);
   };
@@ -101,7 +98,6 @@ const App = () => {
   // Function to handle writing a command to a writable characteristic
   const handleWriteCommand = async (uuid, command) => {
     try {
-      // Use the existing service instead of reconnecting
       if (service) {
         const characteristic = await service.getCharacteristic(uuid);
 
@@ -123,7 +119,7 @@ const App = () => {
     <Container fluid="md" className="mt-4">
       <Row>
         <Col>
-          <h1><GiScooter style={{ marginRight: "10px" }} />UNU Scooter</h1> {/* Scooter icon */}
+          <h1><GiScooter style={{ marginRight: "10px", fontSize: '2em' }} />UNU Scooter</h1> {/* Scooter icon */}
           <Button variant="primary" onClick={connectToScooter}>
             {connected ? 'Connected' : 'Connect to UNU Scooter'}
           </Button>
@@ -149,12 +145,12 @@ const App = () => {
                     <td>{char.value}</td>
                     <td>
                       {writableCharacteristics[char.uuid] ? (
-                        <div className="d-flex">
+                        <div className="d-flex flex-wrap">
                           {writableCharacteristics[char.uuid].map((cmd, idx) => (
                             <Button
                               key={idx}
                               variant="outline-secondary"
-                              className="me-2"
+                              className="me-2 mb-2"
                               onClick={() => handleWriteCommand(char.uuid, cmd.command)}
                             >
                               {cmd.icon} {cmd.command}
