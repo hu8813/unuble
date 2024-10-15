@@ -8,13 +8,17 @@ const MAIN_SERVICE_UUID = "9a590000-6e67-5d0d-aab9-ad9126b66f91";
 
 // List of all possible service UUIDs for optionalServices
 const OPTIONAL_SERVICES = [
-    "9a590001-6e67-5d0d-aab9-ad9126b66f91",
-    "9a590002-6e67-5d0d-aab9-ad9126b66f91",
-    "9a590010-6e67-5d0d-aab9-ad9126b66f91",
+    "00001800-0000-1000-8000-00805f9b34fb", // Generic Access
+    "00001801-0000-1000-8000-00805f9b34fb", // Generic Attribute
+    "9a590000-6e67-5d0d-aab9-ad9126b66f91",
     "9a590020-6e67-5d0d-aab9-ad9126b66f91",
-    "9a590021-6e67-5d0d-aab9-ad9126b66f91",
-    "9a590022-6e67-5d0d-aab9-ad9126b66f91",
-    // Add more service UUIDs as needed
+    "9a590040-6e67-5d0d-aab9-ad9126b66f91",
+    "9a590060-6e67-5d0d-aab9-ad9126b66f91",
+    "9a5900a0-6e67-5d0d-aab9-ad9126b66f91",
+    "9a5900e0-6e67-5d0d-aab9-ad9126b66f91",
+    "9a590100-6e67-5d0d-aab9-ad9126b66f91",
+    "9a59a000-6e67-5d0d-aab9-ad9126b66f91",
+    "9a59a020-6e67-5d0d-aab9-ad9126b66f91"
 ];
 
 // UUIDs for writable characteristics with icons
@@ -34,154 +38,193 @@ const writableCharacteristics = {
     ],
 };
 
-// Complete readable characteristics
+// Complete readable characteristics with their respective service UUIDs
 const readableCharacteristics = {
-    "9a590020-6e67-5d0d-aab9-ad9126b66f91": { description: "Scooter Status", values: ["stand-by", "off", "parked", "shutting-down", "ready-to-drive", "updating"] },
-    "9a590021-6e67-5d0d-aab9-ad9126b66f91": { description: "Battery Level", isPercentage: true }, // Example of percentage
-    "9a590022-6e67-5d0d-aab9-ad9126b66f91": { description: "Voltage", isVoltage: true }, // Example of voltage
-    // You can add more readable characteristics as needed.
+    // Proprietary Service 1
+    "9a590021-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Battery Level", 
+        values: ["stand-by", "off", "parked", "shutting-down", "ready-to-drive", "updating"] 
+    },
+    "9a590022-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Voltage", 
+        isVoltage: true 
+    },
+    "9a590023-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Seat Box Status", 
+        values: ["open", "closed", "unknown"] 
+    },
+
+    // Proprietary Service 2
+    "9a590041-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "AUX Battery Voltage", 
+        isVoltage: true 
+    },
+    "9a590043-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "AUX Battery Charge Status", 
+        values: ["absorption-charge", "not-charging", "float-charge", "bulk-charge"] 
+    },
+    "9a590044-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "AUX Battery Charge Level", 
+        isPercentage: true 
+    },
+
+    // Proprietary Service 3
+    "9a590061-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "CB Battery Charge Level", 
+        isPercentage: true 
+    },
+    "9a590063-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "CB Battery Remaining Capacity", 
+        isCapacity: true 
+    },
+    "9a590064-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "CB Battery Full Capacity", 
+        isCapacity: true 
+    },
+    "9a590065-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "CB Battery Cell Voltage", 
+        isVoltage: true 
+    },
+    "9a590072-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "CB Battery Charge Status", 
+        values: ["not-charging", "charging", "unknown"] 
+    },
+
+    // Proprietary Service 4
+    "9a590101-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Battery Type", 
+        values: ["cbb", "aux"] // Assume more values can be added if known
+    },
+
+    // Proprietary Service 5
+    "9a5900a1-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Power State", 
+        values: ["booting", "running", "suspending", "suspending-imminent", "hibernating-imminent", "hibernating"] 
+    },
+
+    // Proprietary Service 6
+    "9a5900e2-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Primary Battery State", 
+        values: ["unknown", "asleep", "active", "idle"] 
+    },
+    "9a5900e3-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Primary Battery Presence Indicator", 
+        values: ["1", "0"] // Assume 1 means present, 0 means not present
+    },
+    "9a5900e6-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Primary Battery Cycle Count", 
+        isCount: true 
+    },
+    "9a5900e9-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Primary Battery State of Charge", 
+        isPercentage: true 
+    },
+
+    // Proprietary Service 7
+    "9a5900ee-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Secondary Battery State", 
+        values: ["unknown", "asleep", "active", "idle"] 
+    },
+    "9a5900ef-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Secondary Battery Presence Indicator", 
+        values: ["1", "0"] 
+    },
+    "9a5900f2-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Secondary Battery Cycle Count", 
+        isCount: true 
+    },
+    "9a5900f5-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Secondary Battery State of Charge", 
+        isPercentage: true 
+    },
+
+    // Proprietary Service 8
+    "9a59a001-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "nRF Version", 
+        isVersion: true 
+    },
+    "9a59a021-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Reset Reason", 
+        isReason: true 
+    },
+    "9a59a022-6e67-5d0d-aab9-ad9126b66f91": { 
+        description: "Reset Count", 
+        isCount: true 
+    }
 };
 
 const App = () => {
-    const [characteristicsList, setCharacteristicsList] = useState([]); // Store all characteristics and values
+    const [gattServer, setGattServer] = useState(null);
     const [connected, setConnected] = useState(false);
-    const [device, setDevice] = useState(null); // Store the device for reuse
-    const [gattServer, setGattServer] = useState(null); // Store the GATT server for reuse
-    const [toastMessage, setToastMessage] = useState(''); // Toast message for notifications
+    const [characteristicsList, setCharacteristicsList] = useState([]);
+    const [toastMessage, setToastMessage] = useState('');
 
-    // Connect to the device and retrieve the services
     const connectToScooter = async () => {
         try {
-            // Check if device is already connected
-            if (device && gattServer && gattServer.connected) {
-                setToastMessage("Already connected to the scooter.");
-                return;
-            }
-
-            let scooterDevice = device;
-            if (!scooterDevice) {
-                scooterDevice = await navigator.bluetooth.requestDevice({
-                    filters: [{ services: [MAIN_SERVICE_UUID] }],
-                    optionalServices: OPTIONAL_SERVICES, // Add all optional services here
-                });
-                setDevice(scooterDevice);
-            }
-
-            let gatt = gattServer;
-            if (!gatt) {
-                gatt = await scooterDevice.gatt.connect();
-                setGattServer(gatt);
-            }
-
-            // Get all characteristics from the main service and any additional services
-            const allCharacteristics = await getAllCharacteristics(gatt);
-            setCharacteristicsList(allCharacteristics);
+            const device = await navigator.bluetooth.requestDevice({
+                filters: [{ services: OPTIONAL_SERVICES }]
+            });
+            const server = await device.gatt.connect();
+            setGattServer(server);
             setConnected(true);
+            const characteristics = await getAllCharacteristics(server);
+            setCharacteristicsList(characteristics);
         } catch (error) {
-            console.error("Error connecting to scooter:", error);
-            setToastMessage("Failed to connect to the scooter.");
+            console.error('Connection failed', error);
+            setToastMessage('Connection failed!');
         }
     };
 
-    // Fetch characteristics from all services
-    const getAllCharacteristics = async (gatt) => {
-        const characteristicsData = [];
-        const mainService = await gatt.getPrimaryService(MAIN_SERVICE_UUID);
-        characteristicsData.push(...await fetchCharacteristics(mainService));
-
-        // Fetch characteristics from dynamic services based on UUIDs
-        for (let i = 0; i <= 2; i++) { // Adjust the loop count based on how many services you expect
-            const serviceUUID = `9a5900${i}0-6e67-5d0d-aab9-ad9126b66f91`;
-            try {
-                const service = await gatt.getPrimaryService(serviceUUID);
-                characteristicsData.push(...await fetchCharacteristics(service));
-            } catch (error) {
-                console.error(`Service ${serviceUUID} not found`, error);
-            }
-        }
-
-        return characteristicsData;
-    };
-
-    // Helper function to fetch characteristics from a service
-    const fetchCharacteristics = async (service) => {
-        const characteristics = await service.getCharacteristics();
+    const getAllCharacteristics = async (gattServer) => {
+        const services = await gattServer.getPrimaryServices();
         const characteristicsData = [];
 
-        for (const characteristic of characteristics) {
-            const uuid = characteristic.uuid;
-            let value = "N/A";
+        for (const service of services) {
+            const characteristics = await service.getCharacteristics();
 
-            // If readable, read the characteristic's value
-            if (characteristic.properties.read) {
+            for (const characteristic of characteristics) {
+                const { uuid } = characteristic;
                 const rawValue = await characteristic.readValue();
-                value = decodeValue(rawValue);
 
-                // Special handling for characteristics with predefined values
+                let value = decodeValue(rawValue);
+                // Check if this characteristic has predefined values
                 if (readableCharacteristics[uuid]) {
-                    const { values, isPercentage, isVoltage } = readableCharacteristics[uuid];
-                    if (isPercentage) {
-                        value = `${value}%`;
-                    } else if (isVoltage) {
-                        value = `${value} mV`;
-                    } else if (values) {
-                        value = values[parseInt(value, 10)] || "Unknown";
+                    const values = readableCharacteristics[uuid].values;
+                    if (values) {
+                        value = values[rawValue.getUint8(0)]; // Example for enumerated values
                     }
                 }
-            }
 
-            characteristicsData.push({
-                uuid: uuid,
-                value: value,
-                description: readableCharacteristics[uuid]?.description || "Unknown characteristic",
-            });
+                characteristicsData.push({ uuid, value });
+            }
         }
+
         return characteristicsData;
     };
 
     // Decode the raw value from characteristic
     const decodeValue = (rawValue) => {
-        const decoder = new TextDecoder('utf-8');
-        return decoder.decode(rawValue);
+        return rawValue.getUint8(0); // Adjust this based on your data structure
     };
 
-    // Handle writing to a writable characteristic
-    const writeCharacteristic = async (uuid, value) => {
-        try {
-            const serviceUUID = uuid.replace(/.$/, '0'); // Get the corresponding service UUID
-            const characteristic = await gattServer.getPrimaryService(serviceUUID).getCharacteristic(uuid);
-            const encoder = new TextEncoder('utf-8');
-            await characteristic.writeValue(encoder.encode(value));
-            setToastMessage(`Command "${value}" sent to characteristic "${uuid}".`);
-        } catch (error) {
-            console.error("Error writing to characteristic:", error);
-            setToastMessage("Failed to send command.");
-        }
-    };
+    // Write characteristic value based on command
+    const writeCharacteristic = async (uuid, command) => {
+        if (!gattServer) return;
 
-    // Close the connection
-    const disconnectScooter = async () => {
-        if (gattServer) {
-            await gattServer.disconnect();
-            setConnected(false);
-            setDevice(null);
-            setGattServer(null);
-            setCharacteristicsList([]);
-            setToastMessage("Disconnected from scooter.");
-        }
+        const service = await gattServer.getPrimaryService(MAIN_SERVICE_UUID);
+        const characteristic = await service.getCharacteristic(uuid);
+        const encoder = new TextEncoder('utf-8');
+        await characteristic.writeValue(encoder.encode(command));
+        setToastMessage(`Sent command: ${command}`);
     };
 
     return (
         <Container>
-            <h1 className="text-center my-4"><GiScooter /> Scooter Control Panel</h1>
-            <Button onClick={connectToScooter} variant="primary" className="mb-3" disabled={connected}>
-                {connected ? "Connected" : "Connect to Scooter"}
-            </Button>
+            <h1>Scooter Dashboard</h1>
+            <Button onClick={connectToScooter} variant="primary">Connect</Button>
             {connected && (
                 <>
-                    <Button onClick={disconnectScooter} variant="danger" className="mb-3">
-                        Disconnect
-                    </Button>
+                    <Button onClick={() => gattServer.disconnect()} variant="danger">Disconnect</Button>
                     <Row>
                         <Col>
                             <h2>Readable Characteristics</h2>
@@ -194,8 +237,8 @@ const App = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {characteristicsList.filter(char => readableCharacteristics[char.uuid]).map((char, index) => (
-                                        <tr key={char.uuid}> {/* Ensure unique key */}
+                                    {characteristicsList.filter(char => readableCharacteristics[char.uuid]).map((char) => (
+                                        <tr key={char.uuid}>
                                             <td>{char.uuid}</td>
                                             <td>{readableCharacteristics[char.uuid].description}</td>
                                             <td>{char.value}</td>
@@ -216,7 +259,7 @@ const App = () => {
                                 <tbody>
                                     {Object.keys(writableCharacteristics).flatMap(uuid => 
                                         writableCharacteristics[uuid].map(({ command, icon }, index) => (
-                                            <tr key={`${uuid}-${index}`}> {/* Ensure unique key */}
+                                            <tr key={`${uuid}-${index}`}>
                                                 <td>{icon} {command}</td>
                                                 <td>
                                                     <Button onClick={() => writeCharacteristic(uuid, command)} variant="success">
