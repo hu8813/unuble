@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Table, Dropdown } from 'react-bootstrap';
+import { Button, Container, Row, Col, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { FaLock, FaUnlock, FaBoxOpen, FaArrowRight, FaArrowLeft, FaExclamationTriangle, FaLightbulb } from 'react-icons/fa';
+import { GiScooter } from 'react-icons/gi'; // Importing scooter icon
 
 // Main service UUID
 const SERVICE_UUID = "9a590000-6e67-5d0d-aab9-ad9126b66f91";
 
-// UUIDs for writable characteristics
+// UUIDs for writable characteristics with icons
 const writableCharacteristics = {
   "9a590001-6e67-5d0d-aab9-ad9126b66f91": [
-    "scooter:state lock",
-    "scooter:state unlock",
-    "scooter:seatbox open",
-    "scooter:blinker right",
-    "scooter:blinker left",
-    "scooter:blinker both",
-    "scooter:blinker off"
+    { command: "scooter:state lock", icon: <FaLock /> },
+    { command: "scooter:state unlock", icon: <FaUnlock /> },
+    { command: "scooter:seatbox open", icon: <FaBoxOpen /> },
+    { command: "scooter:blinker right", icon: <FaArrowRight /> },
+    { command: "scooter:blinker left", icon: <FaArrowLeft /> },
+    { command: "scooter:blinker both", icon: <FaExclamationTriangle /> },
+    { command: "scooter:blinker off", icon: <FaLightbulb /> }
   ],
-  "9a590002-6e67-5d0d-aab9-ad9126b66f91": ["hibernate", "wakeup"],
+  "9a590002-6e67-5d0d-aab9-ad9126b66f91": [
+    { command: "hibernate", icon: <FaLock /> },
+    { command: "wakeup", icon: <FaUnlock /> },
+  ],
 };
 
 const App = () => {
@@ -24,6 +29,7 @@ const App = () => {
   const [device, setDevice] = useState(null); // Store the device for reuse
   const [gattServer, setGattServer] = useState(null); // Store the GATT server for reuse
   const [service, setService] = useState(null); // Store the service for reuse
+  const [toastMessage, setToastMessage] = useState(''); // Toast message for notifications
 
   // Connect to the device and retrieve the service
   const connectToScooter = async () => {
@@ -103,13 +109,13 @@ const App = () => {
         const value = encoder.encode(command);
 
         await characteristic.writeValue(value);
-        alert(`Command "${command}" sent successfully to characteristic ${uuid}`);
+        setToastMessage(`Command "${command}" sent successfully!`);
       } else {
-        alert("Not connected to the scooter service.");
+        setToastMessage("Not connected to the scooter service.");
       }
     } catch (error) {
       console.error("Error writing command:", error);
-      alert(`Failed to send command: ${error.message}`);
+      setToastMessage(`Failed to send command: ${error.message}`);
     }
   };
 
@@ -117,7 +123,7 @@ const App = () => {
     <Container fluid="md" className="mt-4">
       <Row>
         <Col>
-          <h1>UNU Scooter</h1>
+          <h1><GiScooter style={{ marginRight: "10px" }} />UNU Scooter</h1> {/* Scooter icon */}
           <Button variant="primary" onClick={connectToScooter}>
             {connected ? 'Connected' : 'Connect to UNU Scooter'}
           </Button>
@@ -132,7 +138,7 @@ const App = () => {
               <thead>
                 <tr>
                   <th>UUID</th>
-                  <th>Values</th>
+                  <th>Value</th>
                   <th>Write Commands</th>
                 </tr>
               </thead>
@@ -143,21 +149,18 @@ const App = () => {
                     <td>{char.value}</td>
                     <td>
                       {writableCharacteristics[char.uuid] ? (
-                        <Dropdown>
-                          <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                            Select Command
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            {writableCharacteristics[char.uuid].map((command, idx) => (
-                              <Dropdown.Item
-                                key={idx}
-                                onClick={() => handleWriteCommand(char.uuid, command)}
-                              >
-                                {command}
-                              </Dropdown.Item>
-                            ))}
-                          </Dropdown.Menu>
-                        </Dropdown>
+                        <div className="d-flex">
+                          {writableCharacteristics[char.uuid].map((cmd, idx) => (
+                            <Button
+                              key={idx}
+                              variant="outline-secondary"
+                              className="me-2"
+                              onClick={() => handleWriteCommand(char.uuid, cmd.command)}
+                            >
+                              {cmd.icon} {cmd.command}
+                            </Button>
+                          ))}
+                        </div>
                       ) : (
                         "N/A"
                       )}
@@ -169,6 +172,13 @@ const App = () => {
           </Col>
         </Row>
       )}
+
+      {/* Toast notification */}
+      <ToastContainer position="bottom-end" className="p-3">
+        <Toast onClose={() => setToastMessage('')} show={!!toastMessage} delay={3000} autohide>
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </Container>
   );
 };
